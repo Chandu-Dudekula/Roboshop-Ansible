@@ -1,0 +1,28 @@
+- name: create ec2 and r53 records
+  hosts: all
+  connection: local
+  vars:
+   sg_id: sg-0c93cbb50366ae3cd  # my ec2 instance security group id required here
+   ami_id: ami-0220d79f3f480ecf5  # my ec2 instance AMI ID
+   env: dev
+   instances:
+    - mongodb
+    - catalogue
+  tasks:
+  - name: Create ec2 instance
+    amazon.aws.ec2_instance:
+     name: "{{ item }}-{{ env }}"  # item will come from loop instances and env replace with variable dev
+     instance_type: t3.micro
+     security_group: "{{ sg_id }}"
+     image_id: "{{ ami_id }}"
+     tags: 
+       Project: roboshop
+       Component: "{{ item }}"
+       Environment: "{{ env }}"
+       Name: "{{ item }}-{{ env }}"
+    loop: "{{ instances }}"
+    register: ec2_output
+
+  - name: print the output
+    ansible.builtin.debug:
+     msg: "{{ ec2_output }}"
