@@ -24,15 +24,12 @@
        Name: "{{ item }}-{{ env }}"
     loop: "{{ instances }}"
     register: ec2_output   # here all output json format will save into ec2_output variable.
-
-     # printing the output and saving the output into ec2_output variable.
-  - name: print the output
+                       
+  - name: print the output  # printing the output and saving the output into ec2_output variable.
     ansible.builtin.debug:
      msg: "{{ ec2_output }}"  # command to run ansible-playbook -i localhost, roboshop.yaml
 
-
-      # creating route 53 records in tasks using ansible playbook
-  - name: create route53 records
+  - name: create route53 records  # creating route 53 records in tasks using ansible playbook
     amazon.aws.route53:
       state: present
       zone: "{{ domain_name }}"
