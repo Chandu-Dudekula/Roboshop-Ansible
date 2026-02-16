@@ -31,7 +31,7 @@
      msg: "{{ ec2_output }}"  # command to run ansible-playbook -i localhost, roboshop.yaml
 
 
-  # creating route 53 records in tasks using ansible playbook
+      # creating route 53 records in tasks using ansible playbook
   - name: create route53 records
     amazon.aws.route53:
       state: present
