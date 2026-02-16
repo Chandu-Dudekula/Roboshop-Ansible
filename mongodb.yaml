@@ -23,4 +23,7 @@
      name: mongod
      enabled: yes
      state: started
+
+# command to execute this mongodb yaml is $ ansible-playbook -i inventory.ini mongodb.yaml
+
     
