@@ -36,6 +36,6 @@
      record: "{{ item.item }}-{{ env }}.{{ domain_name }}" # item.item will replace mongodb-dev.techno90s.online, it will come from loop ec2_ouput.results.item.item
      type: A
      ttl: 1
-     value: "{{ item.instance[0].private_ip_address }}" # here 1st item will replace ec2_output.result, in that it will search instance[0] o index we will get the private_ip_address record
+     value: "{{ item.instances[0].private_ip_address }}" # here 1st item will replace ec2_output.result, in that it will search instance[0] o index we will get the private_ip_address record
      wait: true
     loop: "{{ ec2_output.results }}"
