@@ -33,7 +33,7 @@
     amazon.aws.route53:
      state: present
      zone: "{{ domain_name }}"
-     record: "{{ item.item }}-{{ env }}.{{ domain_name }}" # item.item will replace mongodb-dev.techno90s.online, it will come from loop ec2_ouput.results.item.item
+     record: "{{ item.item }}-{{ env }}.{{ domain_name }}" # item.item will replace mongodb it will come from loop ec2_ouput.results.item.item
      type: A
      ttl: 1
      value: "{{ item.instances[0].private_ip_address }}" # here 1st item will replace ec2_output.result, in that it will search instance[0] o index we will get the private_ip_address record
@@ -44,9 +44,10 @@
     amazon.aws.route53:
      state: present
      zone: "{{ domain_name }}"
-     record: "{{ item.item }}-{{ env }}.{{ domain_name }}"
+     record: "roboshop-{{ env }}.{{ domain_name }}" # it will come roboshop-env.techno09s.online
      type: A
      ttl: 1
      value: "{{ item.instances[0].public_ip_address }}" # here 1st item will replace ec2_output.result, in that it will search instance[0] o index we will get the public_ip_address record
      wait: true
     loop: "{{ ec2_output.results }}"
+    when: item.item == "frontend"
