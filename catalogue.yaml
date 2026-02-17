@@ -58,9 +58,9 @@
     ansible.builtin.command: mongosh --host "{{ MONGODB_HOST }}" --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_output
 
-  # - name: print the output
-  #   ansible.builtin.debug:
-  #    msg: "{{ catalogue_output }}"
+  - name: print the output
+    ansible.builtin.debug:
+     msg: "{{ catalogue_output }}"
 
   # - name: Load the products
   #   ansible.builtin.shell: 
