@@ -53,7 +53,7 @@
   #    src: cart.service
   #    dest: /etc/systemd/system/cart.service
 
-   - name: copy cart service
+  - name: copy cart service
     ansible.builtin.template:    # template module will replace the variable this is called jinja 2 template module ansible will understand
       src: cart.service
       dest: /etc/systemd/system/cart.service
