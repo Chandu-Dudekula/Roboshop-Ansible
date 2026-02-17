@@ -38,10 +38,15 @@
     community.general.npm:
      path: /app
 
-  - name: copy user service 
-    ansible.builtin.copy:
-     src: user.service
-     dest: /etc/systemd/system/user.service
+  # - name: copy user service 
+  #   ansible.builtin.copy:        # copy module just copy the test as it is didn't recogine the variables.
+  #    src: user.service
+  #    dest: /etc/systemd/system/user.service
+
+  - name: copy user service
+    ansible.builtin.template:    # template module will replace the variable this is called jinja 2 template module ansible will understand
+      src: user.service
+      dest: /etc/systemd/system/user.service
 
   - name: start User
     ansible.builtin.service:
