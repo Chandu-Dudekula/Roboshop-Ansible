@@ -60,14 +60,14 @@
 
   - name: print the output
     ansible.builtin.debug:
-     msg: "{{ catalogue_output }}"  # here it will give output stdout error and rc -1 then it means the data products is not loaded.
+     msg: "{{ catalogue_output }}"  # here it will give output stdout error and rc -1 then it means the products is not loaded.
 
   - name: Load the products
     ansible.builtin.shell: mongosh --host "{{ MONGODB_HOST }}" </app/db/master-data.js
     when: catalogue_output.stdout  | int < 0  # here the stdout is string data type the value 0 is integer we need to convert int to string by using int keyword before 0.
 
-  # - name: start catalogue
-  #   ansible.builtin.service:
-  #     name: catalogue
-  #     state: restarted
-  #     enabled: yes
+  - name: start catalogue
+    ansible.builtin.service:
+      name: catalogue
+      state: restarted
+      enabled: yes
