@@ -3,11 +3,12 @@
   become: yes
   tasks:
   - name: Enable nodejs 20
-    ansible.builtin.command: dnf install enable nodejs:20 -y
+    ansible.builtin.command: dnf module enable nodejs:20 -y
+    register: 
 
   - name: install nodejs 
     ansible.builtin.dnf:
-     enabled: yes
+     name: nodejs
      state: present 
   
   - name: create system user roboshop
@@ -37,5 +38,29 @@
   - name: Install dependencies
     community.general.npm:
      path: /app
-    
 
+  - name: copy catalogue service 
+    ansible.builtin.copy:
+     src: catalogue.service
+     dest: /etc/systemd/system/catalogue.service
+
+  - name: copy mongo repo 
+    ansible.builtin.copy:
+     src: mongo.repo
+     dest: /etc/yum.repos.d/mongo.repo
+
+  - name: install mongodb client
+    ansible.builtin.dnf:
+     name: mongodb-mongosh
+     state: present
+
+  - name: check products loaded 
+    ansible.builtin.command: mongosh --host "{{ MONGODB_HOST }}" --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+    register: catalogue_output
+
+  # - name: print the output
+  #   ansible.builtin.debug:
+  #    msg: "{{ catalogue_output }}"
+
+  # - name: Load the products
+  #   ansible.builtin.shell: 
