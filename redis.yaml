@@ -21,3 +21,5 @@
      name: redis    
      enabled: yes
      state: started
+
+  # ansible-playbook -i inventory.ini redis.yaml to execute this script
