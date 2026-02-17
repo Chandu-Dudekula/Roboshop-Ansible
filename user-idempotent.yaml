@@ -60,3 +60,4 @@
       enabled: yes
 
   # ansible-playbook -i inventory.ini user-idempotent.yaml to execute the script
+  # to check the status of catalogue we can do curl http://user-dev.techno90s.online:8080/health
