@@ -73,3 +73,4 @@
       enabled: yes
 
   # to check the status of catalogue we can do curl curl http://catalogue-dev.techno90s.online:8080/health
+  # ansible-playbook -i inventory.ini catalogue.yaml command to run this file
