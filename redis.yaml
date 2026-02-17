@@ -26,6 +26,6 @@
     ansible.builtin.service:
      name: redis    
      enabled: yes
-     state: started
+     state: restarted
 
   # ansible-playbook -i inventory.ini redis.yaml to execute this script
