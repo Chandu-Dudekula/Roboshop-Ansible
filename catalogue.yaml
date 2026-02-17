@@ -71,3 +71,5 @@
       name: catalogue
       state: restarted
       enabled: yes
+
+  # to check the status of catalogue we can do curl curl http://catalogue-dev.techno90s.online:8080/health
