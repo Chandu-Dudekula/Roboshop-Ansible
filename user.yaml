@@ -49,4 +49,4 @@
       state: restarted
       enabled: yes
 
-  # ansible-playbook -i inventory user.yaml to execute the script
+  # ansible-playbook -i inventory.ini user.yaml to execute the script
