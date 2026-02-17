@@ -80,3 +80,5 @@
 
 
   # ansible-playbook -i localhost,   -e '{"instances":["mongodb","catalogue","redis","user","cart","mysql","shipping","rabbitmq","payment","frontend"]}'  -e action=destroy roboshop.yaml
+
+  # ansible-playbook -i localhost,   -e '{"instances":["redis","user","cart"]}' roboshop.yaml  to create redis, user, cart instance along with dns records.
