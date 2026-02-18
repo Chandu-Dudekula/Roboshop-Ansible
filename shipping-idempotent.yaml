@@ -1,0 +1,93 @@
+- name: configure shipping
+  hosts: shipping
+  become: yes
+  tasks:
+  - name: install maven
+    ansible.builtin.dnf:
+     name: maven 
+     state: present
+
+  - name: create system user roboshop
+    ansible.builtin.user:
+     name: roboshop
+     system: true
+     home: /app
+     shell: /sbin/nologin
+     comment: "Roboshop system user"
+
+  - name: delete app directory
+    ansible.builtin.file:
+     path: /app
+     state: absent
+
+  - name: create app directory
+    ansible.builtin.file:
+     path: /app
+     state: directory
+
+  - name: delete shipping zip file
+    ansible.builtin.file:
+     path: /tmp/shipping.zip
+     state: absent
+
+  - name: download shipping zip file
+    ansible.builtin.get_url:
+     url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+     dest: /tmp/shipping.zip
+
+  - name: unzip the shipping
+    ansible.builtin.unarchive:
+     src: /tmp/shipping.zip
+     dest: /app
+     remote_src: yes
+
+  - name: install dependencies
+    ansible.builtin.command: mvn clean package
+    args:                   # here the args telling to asnisble run the command after Change the directory to /app and run mvn clean pacakge
+      chdir: /app
+
+  - name: install dependencies
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar 
+    args:               # here the args telling to asnisble run the command after Change the directory to /app and run mv target/shipping-1.0.jar shipping.jar 
+      chdir: /app
+
+  - name: copy shipping service
+    ansible.builtin.template:    # template module will replace the variable this is called jinja 2 template module ansible will understand
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+
+  - name: daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+
+  - name: install mysql
+    ansible.builtin.dnf:
+     name: mysql 
+     state: present
+
+  - name: install dependencie
+    ansible.builtin.pip:
+      name: "{{ item }}"        # here python module PyMySQL library is required to connect mysql client to load shipping data or schema
+      executable: pip3.9        # here cryptography package is required to connect mysql client to connect with sha2_password authentication.
+    loop:                     
+    - cryptography
+    - PyMySQL
+
+  - name: import shipping data
+    community.mysql.mysql_db:
+      state: import
+      name: all
+      login_host: "{{ MYSQL_HOST }}"
+      login_user: root
+      login_password: RoboShop@1
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql 
+    - /app/db/master-data.sql
+  
+  - name: start and enable shipping
+    ansible.builtin.service:
+      name: shipping
+      state: restarted
+      enabled: yes
