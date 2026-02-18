@@ -91,3 +91,7 @@
       name: shipping
       state: restarted
       enabled: yes
+
+
+  # ansible-playbook -i inventory.ini shipping-idempotent.yaml to run the script 
+  # # to check the status of catalogue we can do curl http://shipping-dev.techno90s.online:8080/health

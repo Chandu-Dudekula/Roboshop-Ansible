@@ -1,0 +1,61 @@
+- name: configure payment server
+  hosts: payment
+  become: yes
+  tasks:
+  - name: install packages
+    ansible.builtin.dnf:
+     name: "{{ item }}"
+     state: present
+    loop:
+    - python3 
+    - gcc 
+    - python3-devel 
+
+  - name: create system user roboshop
+    ansible.builtin.user:
+     name: roboshop
+     system: true
+     home: /app
+     shell: /sbin/nologin
+     comment: "Roboshop system user"
+
+  - name: create app directory
+    ansible.builtin.file:
+     path: /app
+     state: directory
+
+  - name: download payment zip file
+    ansible.builtin.get_url:
+     url: https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip
+     dest: /tmp/payment.zip
+
+  - name: unzip the payment
+    ansible.builtin.unarchive:
+     src: /tmp/payment.zip
+     dest: /app
+     remote_src: yes
+
+  - name: install dependencies
+    ansible.builtin.pip:
+     requirements: requirements.txt
+     executable: pip3.9
+    args:                   # here the args telling to asnisble run the command after Change the directory to /app 
+      chdir: /app
+
+  - name: copy payment service
+    ansible.builtin.template:    # template module will replace the variable this is called jinja 2 template module ansible will understand
+      src: payment.service
+      dest: /etc/systemd/system/payment.service
+
+  - name: daemon reload 
+    ansible.builtin.systemd_service:
+     daemon_reload: true
+
+  - name: start enable payment
+    ansible.builtin.service:
+      name: payment
+      state: restarted
+      enabled: yes
+
+  # ansible-playbook -i inventory.ini payment.yaml to run the script 
+  # # to check the status of catalogue we can do curl http://payment-dev.techno90s.online:8080/health
