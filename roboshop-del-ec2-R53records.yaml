@@ -41,3 +41,8 @@
      wait: false
     loop: "{{ instances }}"
     when: action == "destroy"
+
+
+     # ansible-playbook -i localhost,   -e '{"instances":["mongodb","catalogue","redis","user","cart","mysql","shipping","rabbitmq","payment","frontend"]}'  -e action=destroy roboshop.yaml
+
+     # ansible-playbook -i localhost,   -e '{"instances":["mongodb","catalogue","redis","user","cart","mysql","shipping","rabbitmq","payment","frontend"]}'  -e action=destroy roboshop-del-ec2-R53records.yaml
